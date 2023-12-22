@@ -1,0 +1,2 @@
+# Negotiation-engine
+ Simplify and streamline e-commerce transactions with our Retail Negotiation Engine. Empowering participants and marketplaces to negotiate terms seamlessly, ensuring transparent and efficient trade practices. Enhance your retail experience today! 💼🛍️✨  Key Features:  Interactive Interface Customizable Templates Real-time Updates Termination Management Join Us in Shaping the Future of Retail Negotiation!
