@@ -1,23 +1,23 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/proto_v1/node_modules
-/proto_v1/.pnp
+node_modules
+.pnp
 .pnp.js
 
 # testing
-/proto_v1/coverage
+coverage
 
 # production
-/proto_v1/build
+build
 
 # misc
-/proto_v1/.DS_Store
-/proto_v1/.env.local
-/proto_v1/.env.development.local
-/proto_v1/.env.test.local
-/proto_v1/.env.production.local
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-/proto_v1/npm-debug.log*
-/proto_v1/yarn-debug.log*
-/proto_v1/yarn-error.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
