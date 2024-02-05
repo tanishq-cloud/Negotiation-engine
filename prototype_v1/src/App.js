@@ -4,6 +4,7 @@ import "./App.css";
 import NavBar from "./components/NavBar";
 import ChatBox from "./components/ChatBox";
 import Welcome from "./components/Welcome";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [user] = useAuthState(auth);

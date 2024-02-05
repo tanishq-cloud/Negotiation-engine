@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import {
   query,
   collection,
@@ -10,6 +9,7 @@ import {
 import { db } from "../firebase";
 import Message from "./Message";
 import SendMessage from "./SendMessage";
+import NegotiationCard from "./NegotiationCard";
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -39,7 +39,8 @@ const ChatBox = () => {
     <main className="chat-box">
       <div className="messages-wrapper">
         {messages?.map((message) => (
-          <Message key={message.id} message={message} />
+          message.type == "message" ? (<Message key={message.id} message={message} />)
+          : (<NegotiationCard key={message.id} negotiation={message} />)
         ))}
       </div>
       {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
