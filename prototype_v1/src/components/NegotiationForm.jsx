@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 export default function NegotiationForm({ onCancel, initialData }) {
   const [formData, setFormData] = useState(initialData || {});
-  const [errors, setErrors] = useState({});
+  //const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleCounterOffer = () => {
-    setFormData((prevData) => ({ ...prevData, negotiationType: 'counter' }));
-  };
+  // const handleCounterOffer = () => {
+  //   setFormData((prevData) => ({ ...prevData, negotiationType: 'counter' }));
+  // };
 
-  const handleAcceptOffer = () => {
-    setFormData((prevData) => ({ ...prevData, negotiationType: 'accept' }));
-  };
+  // const handleAcceptOffer = () => {
+  //   setFormData((prevData) => ({ ...prevData, negotiationType: 'accept' }));
+  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -28,30 +28,48 @@ export default function NegotiationForm({ onCancel, initialData }) {
         ...formData,
       };
 
-      if (initialData) {
-        // If it's a counter-offer, update the existing document
-        await db.collection('negotiations').doc(initialData.id).update(negotiationData);
-      } else {
-        // If it's an initial offer, create a new document
-        const { uid, displayName, photoURL } = auth.currentUser;
-        await addDoc(collection(db, 'negotiations'), {
-            type : "negotiation",
-            name: displayName,
-            avatar: photoURL,
-            negotiationData,
-            uid,
-        });
-        await addDoc(collection(db, 'messages'), {
-            type : "negotiation",
-            name: displayName,
-            avatar: photoURL,
-            negotiationData,
-            uid,
-            createdAt : serverTimestamp(),
-        });
-      }
+    
+    const negotiationIdCreater = () => {
+      return new Date().getTime().toString();                             
+  };
+    const negotiationId = negotiationIdCreater();
+    console.log('Generated negotiation ID:', negotiationId);
 
-      onCancel(); // Close the form after submission
+    if (initialData) {
+      // If it's a counter-offer, update the existing document
+      await updateDoc(doc(db, 'negotiations', initialData.negotiationId), {
+        negotiationData: arrayUnion(negotiationData),
+      });
+    } else {
+      // If it's an initial offer, create a new document
+      const { uid, displayName, photoURL } = auth.currentUser;
+      await addDoc(collection(db, 'negotiations'), {
+        type: 'negotiation',
+        name: displayName,
+        avatar: photoURL,
+        counterBy: 'Open',
+        negotiationData,
+        negotiationId, // Use the generated negotiation ID
+        status: 'pending',
+        uid,
+        createdAt: serverTimestamp(),
+      });
+    }
+
+    // Add a new message document with the same negotiation ID
+    const { uid, displayName, photoURL } = auth.currentUser;
+    await addDoc(collection(db, 'messages'), {
+      type: 'negotiation',
+      name: displayName,
+      avatar: photoURL,
+      negotiationData,
+      status: 'pending',
+      negotiationId, // Use the same negotiation ID
+      uid,
+      createdAt: serverTimestamp(),
+    });
+    console.log('Negotiation submitted successfully.');
+    onCancel(); // Close the form after submission
     } catch (error) {
       console.error('Error saving negotiation data:', error);
     }
@@ -158,19 +176,23 @@ export default function NegotiationForm({ onCancel, initialData }) {
 </Form.Group>
 
       <div className="mb-3">
-        <Button variant="secondary" className="me-2" onClick={handleCounterOffer}>
+        {/* <Button variant="secondary" className="me-2" onClick={handleCounterOffer}>
           Counter Offer
         </Button>
         <Button variant="success" className="me-2" onClick={handleAcceptOffer}>
           Accept
-        </Button>
+        </Button> */}
         <Button variant="danger" className="me-2" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit" variant="primary">
-          Submit
+          Propose Offer
         </Button>
       </div>
+      
+
+
+
     </Form>
   );
 }

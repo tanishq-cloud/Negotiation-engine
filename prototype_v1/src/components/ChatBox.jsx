@@ -39,7 +39,7 @@ const ChatBox = () => {
     <main className="chat-box">
       <div className="messages-wrapper">
         {messages?.map((message) => (
-          message.type == "message" ? (<Message key={message.id} message={message} />)
+          message.type === "message" ? (<Message key={message.id} message={message} />)
           : (<NegotiationCard key={message.id} negotiation={message} />)
         ))}
       </div>

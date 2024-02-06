@@ -1,42 +1,49 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useState} from "react";
 import  Card  from 'react-bootstrap/Card';
-// import { format } from 'date-fns';
-import { auth } from '../firebase';
+import {updateDoc,doc} from 'firebase/firestore';
+import { auth, db } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import Button from 'react-bootstrap/Button'
+import NegotiationForm from "./NegotiationForm";
 
 const NegotiationCard = ({ negotiation }) => {
   const [user] = useAuthState(auth);
+  const [showCounterForm, setShowForm] = useState(false);
+
   const isCurrentUser = user && negotiation.uid === user.uid;
-  //TO-DO
-//   const handleAcceptOffer = () => {
-//     // Implement logic for accepting the offer (update the document, etc.)
-//     console.log('Offer Accepted:', negotiation.id);
-//   };
+  const handleAccept = async () => {
+    try {
+      console.log(negotiation);
+      await updateDoc(doc(db, "negotiations", negotiation.negotiationId), {
+        status: "accepted",
+      });
+      
+    } catch (error) {
+      console.error("Error accepting negotiation:", error);
+    }
+  };
 
-//   const handleRejectOffer = () => {
-//     // Implement logic for rejecting the offer (update the document, etc.)
-//     console.log('Offer Rejected:', negotiation.id);
-//   };
+  const handleReject = async () => {
+    try {
+      // Update the negotiation document with status: rejected
+      await updateDoc(db.collection('negotiations').doc(negotiation.negotiationId), {
+        status: "rejected",
+      });
+    } catch (error) {
+      console.error("Error rejecting negotiation:", error);
+    }
+  };
 
-//   const handleCounterOffer = () => {
-//     // Open the negotiation form with previous values for counter offer
-//     setShowCounterOfferForm(true);
-//   };
+  const handleCounterOffer = () => {
+    setShowForm(true);
+  };
 
-//   const handleCounterOfferClose = () => {
-//     // Close the counter offer form
-//     setShowCounterOfferForm(false);
-//   };
+  const handleFormCancel = () => {
+    setShowForm(false);
+  };
 
-//   const handleCounterOfferSubmit = (counterOfferData) => {
-//     // Implement logic for handling counter offer submission
-//     console.log('Counter Offer Submitted:', counterOfferData);
-//     setShowCounterOfferForm(false);
-//     // You can update the document with the counterOfferData here
-//   };
-
-console.log(negotiation);
-console.log("Card is here only")
+// console.log(negotiation);
+// console.log("Card is here only")
   return (
     <div
       className={`chat-bubble ${negotiation.uid === user.uid ? "right" : ""}`}>
@@ -66,8 +73,33 @@ console.log("Card is here only")
           <p><strong>Settlement Cycle:</strong> {negotiation.negotiationData.SettlementCycle}</p>
         </div>
       </Card.Body>
+      <Card.Footer>
+      <div className="mb-3">
+            <Button variant="success" className="me-2" onClick={handleAccept}>
+              Accept
+            </Button>
+            <Button variant="danger" className="me-2" onClick={handleReject}>
+              Reject
+            </Button>
+            <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+              Counter Offer
+            </Button>
+          </div>
+          
+
+      </Card.Footer>
     </Card>
+    {showCounterForm && (
+  <NegotiationForm
+    onCancel={handleFormCancel}
+    initialData={{
+      negotiation
+
+      // Add other fields as needed
+    }} />
+    )}
     </div>
+
   );
 };
 

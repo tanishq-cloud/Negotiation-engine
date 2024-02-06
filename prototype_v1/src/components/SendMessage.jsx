@@ -4,13 +4,13 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { MdAddCard } from "react-icons/md";
 import NegotiationForm from "./NegotiationForm";
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+//import Button from 'react-bootstrap/Button';
 
 
 
 const SendMessage = ({ scroll }) => {
   const [message, setMessage] = useState("");
-  const [showNegotiationForm, setShowNegotiationForm] = useState(true);
+  // const [showNegotiationForm, setShowNegotiationForm] = useState(true);
   const [showModal, setShowModal] = useState(false);
   // const handleNegotiationClick = () => {
   //   console.log("Negotiation button clicked");
@@ -76,9 +76,6 @@ const SendMessage = ({ scroll }) => {
           <Modal.Title id="contained-modal-title-vcenter">Negotiation Form</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        {/* {showNegotiationForm && (
-        <NegotiationForm  />
-      )} */}
           <NegotiationForm onCancel={handleCloseModal} />
         </Modal.Body>
       </Modal>
