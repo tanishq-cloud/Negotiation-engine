@@ -1,23 +1,79 @@
-import React, {useState} from "react";
-import  Card  from 'react-bootstrap/Card';
-import {updateDoc,doc} from 'firebase/firestore';
-import { auth, db } from '../firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import Button from 'react-bootstrap/Button'
+import React, { useState, useEffect } from "react";
+import Card from "react-bootstrap/Card";
+import { setDoc, collection, where, query, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Button from "react-bootstrap/Button";
 import NegotiationForm from "./NegotiationForm";
 
 const NegotiationCard = ({ negotiation }) => {
   const [user] = useAuthState(auth);
   const [showCounterForm, setShowForm] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
 
   const isCurrentUser = user && negotiation.uid === user.uid;
+  console.log(isCurrentUser);
+
+  const getStatusMessage = async () => {
+    try {
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, "negotiations"),
+          where("negotiationId", "==", `${negotiation.negotiationId}`)
+        )
+      );
+
+      if (querySnapshot.empty) {
+        return null; // Negotiation document not found
+      }
+
+      const documentData = querySnapshot.docs[0].data();
+
+      if (documentData.status === "accepted") {
+        return "Offer Accepted";
+      } else if (documentData.status === "rejected") {
+        return "Offer Rejected";
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting negotiation document:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    getStatusMessage().then((message) => {
+      setStatusMessage(message);
+      
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [negotiation.negotiationId]);
+
   const handleAccept = async () => {
     try {
-      console.log(negotiation);
-      await updateDoc(doc(db, "negotiations", negotiation.negotiationId), {
-        status: "accepted",
-      });
-      
+      // Update the negotiation document with status: accepted
+      const query1 = query(
+        collection(db, "negotiations"),
+        where("negotiationId", "==", `${negotiation.negotiationId}`)
+      );
+      const querySnapshot = await getDocs(query1);
+      console.log(querySnapshot);
+      const docRef = querySnapshot.docs[0].ref;
+      //console.log(docRef);
+
+
+      console.log("Negotiaition Id: " + negotiation.negotiationId);
+      await setDoc(
+        docRef,
+        {
+          status: "accepted",
+        },
+        { merge: true }
+      );
+      console.log("Offer Accepted");
+      //window.location.reload();
+      setStatusMessage('Offer Accepted');
     } catch (error) {
       console.error("Error accepting negotiation:", error);
     }
@@ -26,9 +82,30 @@ const NegotiationCard = ({ negotiation }) => {
   const handleReject = async () => {
     try {
       // Update the negotiation document with status: rejected
-      await updateDoc(db.collection('negotiations').doc(negotiation.negotiationId), {
-        status: "rejected",
-      });
+      const query1 = query(
+        collection(db, "negotiations"),
+        where("negotiationId", "==", `${negotiation.negotiationId}`)
+      );
+      const querySnapshot = await getDocs(query1);
+      if (querySnapshot.empty) {
+        console.log(
+          "No documents found with the given negotiationId"
+        );
+      } else {
+        const docRef = querySnapshot.docs[0].ref;
+
+        console.log("Negotiaition Id: " + negotiation.negotiationId);
+        await setDoc(
+          docRef,
+          {
+            status: "rejected",
+          },
+          { merge: true }
+        );
+        console.log("Offer rejected");
+        //window.location.reload();
+        setStatusMessage('Offer Rejected');
+      }
     } catch (error) {
       console.error("Error rejecting negotiation:", error);
     }
@@ -42,64 +119,110 @@ const NegotiationCard = ({ negotiation }) => {
     setShowForm(false);
   };
 
-// console.log(negotiation);
-// console.log("Card is here only")
+  
+
   return (
     <div
-      className={`chat-bubble ${negotiation.uid === user.uid ? "right" : ""}`}>
-    <Card className={`mb-3 ${isCurrentUser ? 'sender' : 'receiver'}`}  style={{ width: '18rem' }}>
-    <Card.Header>
-    <div className="align-items-center">Proposed Negotiation</div>
-    <div className="d-flex align-items-center">
-    
-          <img className="chat-bubble__left" src={negotiation.avatar} alt="user avatar" />
-          <div className="ms-3">
-            <h6 className="user-name">{negotiation.name}</h6>
-            {/* <p className="timestamp">{formattedTimestamp}</p> */}
+      className={`chat-bubble ${
+        negotiation.uid === user.uid ? "right" : ""
+      }`}
+    >
+      <Card
+        className={`mb-3 ${
+          isCurrentUser ? true : false
+        }`}
+        style={{ width: "18rem" }}
+      >
+        <Card.Header>
+          <div className="align-items-center">Proposed Offer by:</div>
+          <div className="d-flex align-items-center">
+            <img
+              className="chat-bubble__left"
+              src={negotiation.avatar}
+              alt="user avatar"
+            />
+            <div className="ms-3">
+              <h4 className="user-name">{negotiation.name}</h4>
+            </div>
           </div>
-        </div>
-    </Card.Header>
-      <Card.Body>
+        </Card.Header>
+        <Card.Body>
+          <div className="mt-3">
+            <p>
+              <strong>Product:</strong> {negotiation.negotiationData.Product}
+            </p>
+            <p>
+              <strong>Price:</strong> {negotiation.negotiationData.Price}
+            </p>
+            <p>
+              <strong>Quantity:</strong>{" "}
+              {negotiation.negotiationData.Quantity}
+            </p>
+            <p>
+              <strong>Warranty:</strong>{" "}
+              {negotiation.negotiationData.Warranty}
+            </p>
+            <p>
+              <strong>Discount:</strong>{" "}
+              {negotiation.negotiationData.Discount}
+            </p>
+            <p>
+              <strong>Buyer's Finder Fee:</strong>{" "}
+              {negotiation.negotiationData.BuyersFinderFee}
+            </p>
+            <p>
+              <strong>Commission:</strong>{" "}
+              {negotiation.negotiationData.Commission}
+            </p>
+            <p>
+              <strong>Settlement Window:</strong>{" "}
+              {negotiation.negotiationData.SettlementWindow}
+            </p>
+            <p>
+              <strong>Settlement Cycle:</strong>{" "}
+              {negotiation.negotiationData.SettlementCycle}
+            </p>
+          </div>
+        </Card.Body>
         
-        <div className="mt-3">
-          <p><strong>Product:</strong> {negotiation.negotiationData.Product}</p>
-          <p><strong>Price:</strong> {negotiation.negotiationData.Price}</p>
-          <p><strong>Quantity:</strong> {negotiation.negotiationData.Quantity}</p>
-          <p><strong>Warranty:</strong> {negotiation.negotiationData.Warranty}</p>
-          <p><strong>Discount:</strong> {negotiation.negotiationData.Discount}</p>
-          <p><strong>Buyer's Finder Fee:</strong> {negotiation.negotiationData.BuyersFinderFee}</p>
-          <p><strong>Commission:</strong> {negotiation.negotiationData.Commission}</p>
-          <p><strong>Settlement Window:</strong> {negotiation.negotiationData.SettlementWindow}</p>
-          <p><strong>Settlement Cycle:</strong> {negotiation.negotiationData.SettlementCycle}</p>
-        </div>
-      </Card.Body>
-      <Card.Footer>
-      <div className="mb-3">
-            <Button variant="success" className="me-2" onClick={handleAccept}>
-              Accept
-            </Button>
-            <Button variant="danger" className="me-2" onClick={handleReject}>
-              Reject
-            </Button>
-            <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
-              Counter Offer
-            </Button>
-          </div>
-          
-
-      </Card.Footer>
-    </Card>
-    {showCounterForm && (
-  <NegotiationForm
-    onCancel={handleFormCancel}
-    initialData={{
-      negotiation
-
-      // Add other fields as needed
-    }} />
-    )}
+        <Card.Footer>
+          {statusMessage ? (
+            <div className="mb-3">{statusMessage}</div>
+          ) : (
+            <div className="mb-3">
+              {isCurrentUser ? (
+                <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+                  Edit Offer
+                </Button>
+              ) : negotiation.counterBy !== "Open" ? (
+                <>
+                  <Button variant="success" className="me-2" onClick={handleAccept}>
+                    Accept
+                  </Button>
+                  <Button variant="danger" className="me-2" onClick={handleReject}>
+                    Reject
+                  </Button>
+                  <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+                    Counter Offer
+                  </Button>
+                </>
+              ) : (
+                <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+                  Counter Offer
+                </Button>
+              )}
+            </div>
+          )}
+        </Card.Footer>
+       
+      </Card>
+      {showCounterForm && (
+        <NegotiationForm
+          onCancel={handleFormCancel}
+          initialData={negotiation}
+        />
+      )}
     </div>
-
   );
 };
 

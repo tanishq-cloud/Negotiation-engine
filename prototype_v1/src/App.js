@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "./App.css";
 import NavBar from "./components/NavBar";
 import ChatBox from "./components/ChatBox";
-import Welcome from "./components/Welcome";
+import Info from "./components/Info";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <NavBar />
       {!user ? (
-        <Welcome />
+        <Info />
       ) : (
         <>
           <ChatBox />

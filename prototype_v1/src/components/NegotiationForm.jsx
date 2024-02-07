@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
-import { doc, updateDoc, arrayUnion, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {  where, query, getDocs, setDoc, arrayUnion, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 export default function NegotiationForm({ onCancel, initialData }) {
-  const [formData, setFormData] = useState(initialData || {});
+  const [formData, setFormData] = useState(initialData?.negotiationData || {});
   //const [errors, setErrors] = useState({});
+  console.log("NegotiationForm")
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-
-  // const handleCounterOffer = () => {
-  //   setFormData((prevData) => ({ ...prevData, negotiationType: 'counter' }));
-  // };
-
-  // const handleAcceptOffer = () => {
-  //   setFormData((prevData) => ({ ...prevData, negotiationType: 'accept' }));
-  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -32,43 +25,68 @@ export default function NegotiationForm({ onCancel, initialData }) {
     const negotiationIdCreater = () => {
       return new Date().getTime().toString();                             
   };
-    const negotiationId = negotiationIdCreater();
-    console.log('Generated negotiation ID:', negotiationId);
+   
 
     if (initialData) {
       // If it's a counter-offer, update the existing document
-      await updateDoc(doc(db, 'negotiations', initialData.negotiationId), {
-        negotiationData: arrayUnion(negotiationData),
-      });
-    } else {
-      // If it's an initial offer, create a new document
+      const query1 = query(collection(db, "negotiations"), where("negotiationId", "==", `${initialData.negotiationId}`));
+      const querySnapshot = await getDocs(query1);
+      const docRef = querySnapshot.docs[0].ref;
       const { uid, displayName, photoURL } = auth.currentUser;
-      await addDoc(collection(db, 'negotiations'), {
-        type: 'negotiation',
-        name: displayName,
-        avatar: photoURL,
-        counterBy: 'Open',
-        negotiationData,
-        negotiationId, // Use the generated negotiation ID
-        status: 'pending',
-        uid,
-        createdAt: serverTimestamp(),
-      });
-    }
+      console.log("Negotiaition Id: "+initialData.negotiationId);
+      await setDoc(docRef, {
+        counterBy: arrayUnion({ uid, displayName, photoURL }),
+        negotiationData: arrayUnion(negotiationData),
+      }, { merge: true });
+      console.log("Offer Updated")
 
-    // Add a new message document with the same negotiation ID
-    const { uid, displayName, photoURL } = auth.currentUser;
+    
     await addDoc(collection(db, 'messages'), {
       type: 'negotiation',
       name: displayName,
       avatar: photoURL,
       negotiationData,
+      negotiationId : initialData.negotiationId,// Use the same negotiation ID
       status: 'pending',
-      negotiationId, // Use the same negotiation ID
       uid,
       createdAt: serverTimestamp(),
     });
-    console.log('Negotiation submitted successfully.');
+    console.log('Counter Form submitted successfully.');
+  
+    } else { 
+            
+      const negotiationId = negotiationIdCreater();
+      console.log('Newly Generated negotiation ID:'+ negotiationId);
+      // If it's an initial offer, create a new document
+      const { uid, displayName, photoURL } = auth.currentUser;
+      await addDoc(collection(db, 'negotiations'), {
+        type: 'negotiation',
+        offerName : negotiationData.Product,
+        name: displayName,
+        avatar: photoURL,
+        counterBy: 'Open',
+        negotiationData : arrayUnion(negotiationData),
+        negotiationId, // Use the generated negotiation ID
+        status: 'pending',
+        uid,
+        createdAt: serverTimestamp(),
+      });
+    // Add a new message document with the same negotiation ID
+    await addDoc(collection(db, 'messages'), {
+      type: 'negotiation',
+      name: displayName,
+      avatar: photoURL,
+      negotiationData,
+      negotiationId,// Use the same negotiation ID
+      status: 'pending',
+      uid,
+      createdAt: serverTimestamp(),
+    });
+    console.log('New Negotiation submitted successfully.');
+  }
+
+  
+    
     onCancel(); // Close the form after submission
     } catch (error) {
       console.error('Error saving negotiation data:', error);
