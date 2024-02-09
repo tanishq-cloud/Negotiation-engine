@@ -31,6 +31,9 @@ const ChatBox = () => {
         (a, b) => a.createdAt - b.createdAt
       );
       setMessages(sortedMessages);
+      // if (scroll.current) {
+      //   scroll.current.scrollTop = scroll.current.scrollHeight;
+      // }
     });
     return () => unsubscribe;
   }, []);;

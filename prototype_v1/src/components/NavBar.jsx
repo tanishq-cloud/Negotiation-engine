@@ -4,11 +4,12 @@ import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Canvas from "./Canvas";
+import CurrentNegotiationAnalysis from "./CurrentNegotiationAnalysis";
+import {Row,Col} from 'react-bootstrap';
 
 
 const NavBar = () => {
   const [user] = useAuthState(auth);
-
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
@@ -23,7 +24,11 @@ const NavBar = () => {
       <h1>Negotiation Engine</h1>
       {user ? (
         <>
-        <Canvas/>
+        <Row>
+          <Col><Canvas/></Col> 
+          <Col><CurrentNegotiationAnalysis /></Col>
+        </Row>
+        
         
         <button onClick={signOut} className="sign-out" type="button">
           Sign Out

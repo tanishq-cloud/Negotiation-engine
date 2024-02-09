@@ -1,24 +1,34 @@
-// NegotiationDetailsModal.jsx
 import React, {useState} from 'react';
 import { Modal, Button, Card, Row, Col } from 'react-bootstrap';
 import RenderCounterOffer from './RenderCounterOffer';
+import NegotiationAnalysis from './NegotiationAnalysis';
 
 const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiation }) => {
-  console.log("from NegotiationModal"+selectedNegotiation)
+  
+  
+  
   const [isFinalAccepted, setIsFinalAccepted] = useState(false);
   const [showFinalAccepted, setFinalAccepted] = useState(false)
   const finalAcceptedOffer = isFinalAccepted
   ? [selectedNegotiation.negotiationData[selectedNegotiation.negotiationData.length - 1]]
   : [];
   const handleFinalAcceptedOfferClick = () => {
+    setIsFinalAccepted(true);
     setFinalAccepted(true);
     console.log('Final Accepted Offer clicked');
   };
-  //console.log(selectedNegotiation);
+  console.log("i dont'know it is fetching it?",selectedNegotiation);
   return (
     <Modal show={showModal} onHide={handleModalClose} size="lg">
       <Modal.Header closeButton>
+        <Row>
+          <Col>
         <Modal.Title>Negotiation Details</Modal.Title>
+        </Col>
+        <Col>
+        <NegotiationAnalysis negotiationData={selectedNegotiation.negotiationData} negotiationStatus={selectedNegotiation.status} />
+     </Col>
+      </Row>
       </Modal.Header>
       <Modal.Body>
         <Row>
@@ -28,37 +38,38 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
                 <Card.Title>Proposed Offer</Card.Title>
                     <div className="mt-3">
                     <p>
-                    <strong>Product:</strong> {selectedNegotiation.negotiationData[0].Product}
+                    <strong>Product:</strong> {
+                    selectedNegotiation.negotiationData[0].Product}
                     </p>
                     <p>
                     <strong>Price:</strong> {selectedNegotiation.negotiationData[0].Price}
                     </p>
                     <p>
-                    <strong>Quantity:</strong>{" "}
+                    <strong>Quantity:</strong>
                     {selectedNegotiation.negotiationData[0].Quantity}
                     </p>
                     <p>
-                    <strong>Warranty:</strong>{" "}
+                    <strong>Warranty:</strong>
                     {selectedNegotiation.negotiationData[0].Warranty}
                     </p>
                     <p>
-                    <strong>Discount:</strong>{" "}
+                    <strong>Discount:</strong>
                     {selectedNegotiation.negotiationData[0].Discount}
                     </p>
                     <p>
-                    <strong>Buyer's Finder Fee:</strong>{" "}
+                    <strong>Buyer's Finder Fee:</strong>
                     {selectedNegotiation.negotiationData[0].BuyersFinderFee}
                     </p>
                     <p>
-                    <strong>Commission:</strong>{" "}
+                    <strong>Commission:</strong>
                     {selectedNegotiation.negotiationData[0].Commission}
                     </p>
                     <p>
-                    <strong>Settlement Window:</strong>{" "}
+                    <strong>Settlement Window:</strong>
                     {selectedNegotiation.negotiationData[0].SettlementWindow}
                     </p>
                     <p>
-                    <strong>Settlement Cycle:</strong>{" "}
+                    <strong>Settlement Cycle:</strong>
                     {selectedNegotiation.negotiationData[0].SettlementCycle}
                     </p>
                 </div>
@@ -70,13 +81,14 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
         </Col>
         <Col md={6}>
         {selectedNegotiation.negotiationData.length > 1 && (
-          <RenderCounterOffer counterOffers={selectedNegotiation.negotiationData.slice(1)} />
+          <RenderCounterOffer counterOffers={selectedNegotiation.negotiationData.slice(1) } highlightChanges />
         )}
 
         
           {/* To render the Final Accepted Offer */}
         {isFinalAccepted && (
-          <Modal show={showFinalAccepted} onHide={()=> setFinalAccepted(false)}>
+          <Modal show={showFinalAccepted} onHide={()=> {setIsFinalAccepted(false); 
+          setFinalAccepted(false);}}>
             <Modal.Header closeButton>
         <Modal.Title>Final Offer Details:</Modal.Title>
       </Modal.Header>
