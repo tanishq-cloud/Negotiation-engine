@@ -4,7 +4,7 @@ import { Modal, Button, Card, Row, Col } from 'react-bootstrap';
 import RenderCounterOffer from './RenderCounterOffer';
 
 const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiation }) => {
-  //console.log("from NegotiationModal"+selectedNegotiation)
+  console.log("from NegotiationModal"+selectedNegotiation)
   const [isFinalAccepted, setIsFinalAccepted] = useState(false);
   const [showFinalAccepted, setFinalAccepted] = useState(false)
   const finalAcceptedOffer = isFinalAccepted
@@ -14,7 +14,7 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
     setFinalAccepted(true);
     console.log('Final Accepted Offer clicked');
   };
-  
+  //console.log(selectedNegotiation);
   return (
     <Modal show={showModal} onHide={handleModalClose} size="lg">
       <Modal.Header closeButton>

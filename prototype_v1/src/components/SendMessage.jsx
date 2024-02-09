@@ -73,11 +73,11 @@ const SendMessage = ({ scroll }) => {
       centered
       show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">Negotiation Form</Modal.Title>
+          <Modal.Title id="contained-modal-title-vcenter">Offer Form</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        
           <NegotiationForm onCancel={handleCloseModal} />
-        </Modal.Body>
+        
       </Modal>
     </>
   );

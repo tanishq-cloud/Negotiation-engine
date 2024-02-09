@@ -4,6 +4,7 @@ import { setDoc, collection, where, query, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Button from "react-bootstrap/Button";
+import {Row, Col, Alert} from "react-bootstrap";
 import NegotiationForm from "./NegotiationForm";
 
 const NegotiationCard = ({ negotiation }) => {
@@ -30,9 +31,9 @@ const NegotiationCard = ({ negotiation }) => {
       const documentData = querySnapshot.docs[0].data();
 
       if (documentData.status === "accepted") {
-        return "Offer Accepted";
+        return "Accepted";
       } else if (documentData.status === "rejected") {
-        return "Offer Rejected";
+        return "Rejected";
       } else {
         return null;
       }
@@ -134,7 +135,9 @@ const NegotiationCard = ({ negotiation }) => {
         style={{ width: "18rem" }}
       >
         <Card.Header>
-          <div className="align-items-center">Proposed Offer by:</div>
+          <div className="align-items-center"><strong>Negotiaition Id:</strong> {negotiation.negotiationId}</div>
+        </Card.Header>
+        <Card.Header>
           <div className="d-flex align-items-center">
             <img
               className="chat-bubble__left"
@@ -187,7 +190,11 @@ const NegotiationCard = ({ negotiation }) => {
         
         <Card.Footer>
           {statusMessage ? (
-            <div className="mb-3">{statusMessage}</div>
+          <div className="mb-3">
+      <Alert key={statusMessage} variant={statusMessage === 'Accepted' ? 'success' : 'danger'}>
+        Offer: {statusMessage}
+      </Alert>
+         </div>
           ) : (
             <div className="mb-3">
               {isCurrentUser ? (
@@ -196,18 +203,31 @@ const NegotiationCard = ({ negotiation }) => {
                 </Button>
               ) : negotiation.counterBy !== "Open" ? (
                 <>
+                <Row>
+                  <Col><Button variant="danger" className="me-2" onClick={handleReject}>
+                    Reject
+                  </Button>
+                  
+                  </Col>
+                  <Col>
                   <Button variant="success" className="me-2" onClick={handleAccept}>
                     Accept
                   </Button>
-                  <Button variant="danger" className="me-2" onClick={handleReject}>
-                    Reject
-                  </Button>
-                  <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+                  </Col>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col>
+                  <div className="d-grid gap-2">
+                  
+                  <Button variant="primary" onClick={handleCounterOffer}>
                     Counter Offer
                   </Button>
+                </div></Col>
+                </Row>
                 </>
               ) : (
-                <Button variant="primary" className="me-2" onClick={handleCounterOffer}>
+                <Button variant="primary" className="me-1" onClick={handleCounterOffer}>
                   Counter Offer
                 </Button>
               )}

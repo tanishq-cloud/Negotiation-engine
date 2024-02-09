@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Badge } from 'react-bootstrap';
 import NegotiationDetailsModal from './NegotiaitonDetailsModal';
 
 const NegotiationListRenderer = ({ negotiations, onNegotiationClick }) => {
@@ -12,19 +12,22 @@ const NegotiationListRenderer = ({ negotiations, onNegotiationClick }) => {
 
   return (
     <div>
-      <h2>Your Negotiations</h2>
+      <h2>Your Offers</h2>
       {negotiations.map((negotiation) => (
         <>
         <Card key={negotiation.negotiationId} className="mb-3">
           <Card.Body>
             <Card.Title>{negotiation.offerName}</Card.Title>
-            <Card.Text>Status: {negotiation.status}</Card.Text>
+            <Card.Text>Status: <Badge bg={negotiation.status === 'accepted' ? 'success' : 'danger'}>
+              {negotiation.status}
+            </Badge>  
+              </Card.Text>
             <Card.Text>Created At:  {negotiation.createdAt.toDate().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' })}</Card.Text>
             <Card.Text>Negotiation ID: {negotiation.negotiationId}</Card.Text>
             <Button onClick={() => {setShowModal(true); 
                                     onNegotiationClick(negotiation)}
                                     }>
-              View Details
+              View Negotiations Details
             </Button>
           </Card.Body>
         </Card>
