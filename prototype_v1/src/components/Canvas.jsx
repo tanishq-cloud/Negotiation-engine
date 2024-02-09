@@ -1,39 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import NegotiationList from './NegotiationList';
-// import { collection, getDocs, query, where } from 'firebase/firestore';
-// import { db, auth } from '../firebase';
+import NegotiationListRenderer from './NegotiationListRenderer';
+import { orderBy, limit,  collection, getDocs, query, where } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function Canvas() {
   const [show, setShow] = useState(false);
-//   const [negotiations, setNegotiations] = useState([]);
-//   const [loading, setLoading] = useState(true); // Add a loading state variable
+  const [user] = useAuthState(auth);
+  const [negotiations, setNegotiations] = useState([]);
+   
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-//   useEffect(() => {
-//     // Fetch negotiations data from Firebase Firestore
-//     const fetchNegotiations = async () => {
-//       try {
-//         const q = query(collection(db, 'negotiations'), where('uid', '==', auth.currentUser.uid));
-//         const querySnapshot = await getDocs(q);
-//         const negotiationsData = querySnapshot.docs.map((doc) => doc.data());
-//         setNegotiations(negotiationsData);
-//         setLoading(false); // Set loading to false once the data has been fetched
-//       } catch (error) {
-//         console.error('Error fetching negotiations:', error);
-//       }
-//     };
+  const fetchNegotiations = async () => {
+    try {
+      const currentUserUID = user.uid;
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, 'negotiations'),
+          where('uid', '==', `${currentUserUID}`),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        )
+      );
 
-//     // Check if the component is mounting for the first time
-//     if (!loading) {
-//       fetchNegotiations();
-//     }
-//   }, [loading]); // Run the effect only when the loading state changes
+      const fetchedNegotiations = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
 
-//   console.log('negotiations:', negotiations);
+      const sortedNegotiations = fetchedNegotiations.sort((a, b) => a.createdAt - b.createdAt);
+      setNegotiations(sortedNegotiations);
+    } catch (error) {
+      console.error('Error fetching negotiations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNegotiations();
+    // eslint-disable-next-line
+  }, [user]);
+
+  console.log(negotiations);
+
+  const onNegotiationClick = (negotiation) => {
+    console.log('Clicked on negotiation:', negotiation);
+  };
 
   return (
     <>
@@ -46,11 +61,12 @@ function Canvas() {
           <Offcanvas.Title>Console</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          
-            <NegotiationList  />
-         
+        <NegotiationListRenderer negotiations={negotiations} onNegotiationClick={onNegotiationClick} /> 
         </Offcanvas.Body>
       </Offcanvas>
+
+      
+     
     </>
   );
 }

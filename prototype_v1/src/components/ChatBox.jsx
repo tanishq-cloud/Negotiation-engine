@@ -33,8 +33,8 @@ const ChatBox = () => {
       setMessages(sortedMessages);
     });
     return () => unsubscribe;
-  }, []);
-
+  }, []);;
+  //console.log(messages)
   return (
     <main className="chat-box">
       <div className="messages-wrapper">

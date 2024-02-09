@@ -12,7 +12,7 @@ const NegotiationCard = ({ negotiation }) => {
   const [statusMessage, setStatusMessage] = useState(null);
 
   const isCurrentUser = user && negotiation.uid === user.uid;
-  console.log(isCurrentUser);
+  //console.log(isCurrentUser);
 
   const getStatusMessage = async () => {
     try {

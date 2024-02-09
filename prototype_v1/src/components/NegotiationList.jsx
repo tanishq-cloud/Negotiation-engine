@@ -1,14 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Card, Carousel } from 'react-bootstrap';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+//import { orderBy, limit, onSnapshot, collection, getDocs, query, where } from 'firebase/firestore';
+//import { db, auth } from '../firebase';
+
 
 const NegotiationList = () => {
-    const [negotiations, setNegotiations] = useState([]);
-   
-  const [selectedNegotiation, setSelectedNegotiation] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-
+  const negotiations = [
+    {
+      negotiationId: '1',
+      offerName: 'Offer 1',
+      status: 'Pending',
+      createdAt: '2022-02-08T12:00:00',
+      negotiationData: [
+        {
+          Product: 'Product A',
+          Price: 100,
+          Quantity: 5,
+          Warranty: '1 year',
+          Discount: 10,
+          BuyersFinderFee: 5,
+          Commission: 8,
+          SettlementWindow: '30 days',
+          SettlementCycle: 'Monthly',
+        },
+        // Additional counter offer data can be added here
+      ],
+    },
+    {
+      negotiationId: '2',
+      offerName: 'Offer 2',
+      status: 'Accepted',
+      createdAt: '2022-02-08T13:30:00',
+      negotiationData: [
+        {
+          Product: 'Product B',
+          Price: 150,
+          Quantity: 3,
+          Warranty: '2 years',
+          Discount: 15,
+          BuyersFinderFee: 7,
+          Commission: 10,
+          SettlementWindow: '45 days',
+          SettlementCycle: 'Bi-weekly',
+        },
+        // Additional counter offer data can be added here
+      ],
+    },
+    // Additional negotiations can be added here
+  ];
+    const [selectedNegotiation, setSelectedNegotiation] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
   const handleNegotiationClick = (negotiation) => {
     if (negotiation) {
@@ -23,9 +64,9 @@ const NegotiationList = () => {
   };
 
   const renderCounterOfferCards = () => {
-    if (selectedNegotiation && selectedNegotiation.negotiationData.length > 1) {
+    if (selectedNegotiation && selectedNegotiation.negotiationData && selectedNegotiation.negotiationData.length > 1) {
       const counterOffers = selectedNegotiation.negotiationData.slice(1);
-      console.log(selectedNegotiation)
+      console.log("Selected Negotiaiton"+selectedNegotiation)
 
       return (
         <Carousel>
@@ -79,27 +120,9 @@ const NegotiationList = () => {
       );
     }
 
-    if (!negotiations || negotiations.length === 0) {
-        return <div>Loading...</div>; // Display loading indicator
-      }
+    return null;
   };
 
- 
-  const fetchNegotiations = async () => {
-    try {
-      const q = query(collection(db, 'negotiations'), where('uid', '==', auth.currentUser.uid));
-      const querySnapshot = await getDocs(q);
-      const negotiationsData = querySnapshot.docs.map((doc) => doc.data());
-      console.log(negotiationsData)
-      setNegotiations(negotiationsData);
-    } catch (error) {
-      console.error('Error fetching negotiations:', error);
-    }
-  };
-
-  // Call the data fetching function directly
-  fetchNegotiations();
-  console.log(negotiations);
   return (
 
     <div>
