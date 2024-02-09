@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Carousel } from 'react-bootstrap';
 
 const RenderCounterOffer = ({ counterOffers, highlightChanges }) => {
-    console.log(highlightChanges)
+  
   return (
     <Carousel>
       {counterOffers.map((counterOffer, index) => (

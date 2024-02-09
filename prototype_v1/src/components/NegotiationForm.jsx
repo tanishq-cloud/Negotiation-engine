@@ -3,8 +3,11 @@ import {  where, query, getDocs, setDoc, arrayUnion, addDoc, collection, serverT
 import { auth, db } from '../firebase';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { Col, Row } from 'react-bootstrap';
 
 export default function NegotiationForm({ onCancel, initialData }) {
+  const settlementWindowOptions = ['15 days','30 days', '60 days', '90 days']; 
+  const settlementCycleOptions = ['Weekly', 'Bi-weekly','Monthly', 'Quarterly', 'Yearly'];
   const [formData, setFormData] = useState(initialData?.negotiationData || {});
   //const [errors, setErrors] = useState({});
   console.log("NegotiationForm")
@@ -95,6 +98,7 @@ export default function NegotiationForm({ onCancel, initialData }) {
 
   return (
     <Form onSubmit={onSubmit} className="container mt-4">
+      <Row>
       <Form.Group className="mb-3">
         <Form.Label>Product</Form.Label>
         <Form.Control
@@ -106,18 +110,23 @@ export default function NegotiationForm({ onCancel, initialData }) {
           required
         />
       </Form.Group>
+      </Row>
+      <Row>
+        <Col>
       <Form.Group className="mb-3">
         <Form.Label>Price</Form.Label>
         <Form.Control
           type="number"
           name="Price"
-          placeholder="Price"
+          placeholder="Price ₹"
           value={formData.Price || ''}
           onChange={handleChange}
           required
           min="1"
         />
       </Form.Group>
+      </Col>
+      <Col>
       <Form.Group className="mb-3">
   <Form.Label>Quantity</Form.Label>
   <Form.Control
@@ -129,6 +138,8 @@ export default function NegotiationForm({ onCancel, initialData }) {
     required
   />
 </Form.Group>
+</Col>
+</Row>
 <Form.Group className="mb-3">
   <Form.Label>Warranty</Form.Label>
   <Form.Control
@@ -139,72 +150,89 @@ export default function NegotiationForm({ onCancel, initialData }) {
     onChange={handleChange}
   />
 </Form.Group>
+<Row>
+  <Col>
 <Form.Group className="mb-3">
   <Form.Label>Discount</Form.Label>
   <Form.Control
     type="number"
     name="Discount"
-    placeholder="Discount"
+    placeholder="Discount%"
     value={formData.Discount || ''}
     onChange={handleChange}
    
   />
 </Form.Group>
+</Col>
+<Col>
 <Form.Group className="mb-3">
   <Form.Label>Buyer's Finder Fee</Form.Label>
   <Form.Control
     type="number"
     name="BuyersFinderFee"
-    placeholder="Buyer's Finder Fee"
+    placeholder="Buyer's Finder Fee ₹"
     value={formData["BuyersFinderFee"] || ''}
     onChange={handleChange}
     required
   />
 </Form.Group>
+</Col>
+<Col>
 <Form.Group className="mb-3">
   <Form.Label>Commission</Form.Label>
   <Form.Control
     type="number"
     name="Commission"
-    placeholder="Commission in percentage"
+    placeholder="Commission%"
     value={formData.Commission || ''}
     onChange={handleChange}
     required
   />
 </Form.Group>
-<Form.Group className="mb-3">
-  <Form.Label>Settlement Window</Form.Label>
-  <Form.Control
-    type="time"
-    name="SettlementWindow"
-    placeholder="Settlement Window"
-    value={formData["SettlementWindow"] || ''}
-    onChange={handleChange}
-  />
-</Form.Group>
-<Form.Group className="mb-3">
-  <Form.Label>Settlement Cycle</Form.Label>
-  <Form.Control
-    type="time"
-    name="SettlementCycle"
-    placeholder="Settlement Cycle"
-    value={formData["SettlementCycle"] || ''}
-    onChange={handleChange}
-  />
-</Form.Group>
-
+</Col>
+</Row>
+<Row>
+      <Col>
+        <Form.Group className="mb-3">
+          <Form.Label>Settlement Window</Form.Label>
+          <Form.Select
+            name="SettlementWindow"
+            value={formData["SettlementWindow"] || ''}
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Settlement Window</option>
+            {settlementWindowOptions.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      </Col>
+      <Col>
+        <Form.Group className="mb-3">
+          <Form.Label>Settlement Cycle</Form.Label>
+          <Form.Select
+            name="SettlementCycle"
+            value={formData["SettlementCycle"] || ''}
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Settlement Cycle</option>
+            {settlementCycleOptions.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      </Col>
+    </Row>
       <div className="mb-3">
-        {/* <Button variant="secondary" className="me-2" onClick={handleCounterOffer}>
-          Counter Offer
-        </Button>
-        <Button variant="success" className="me-2" onClick={handleAcceptOffer}>
-          Accept
-        </Button> */}
         <Button variant="danger" className="me-2" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit" variant="primary">
-          Propose Offer
+          Submit Offer
         </Button>
       </div>
       
