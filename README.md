@@ -30,7 +30,7 @@ Our Retail Commerce Negotiation Engine provides a comprehensive solution to stre
 
 ## How to Get Started
 
-Explore our Retail Commerce Negotiation Engine to enhance your e-commerce transactions. Whether you are a participant or a marketplace, our solution is tailored to meet the negotiation needs of diverse stakeholders.
+For more information see [prototype_v1](https://github.com/tanishq-cloud/Negotiation-engine/tree/main/prototype_v1)
 
 **Contribute to the Future of Retail Commerce Negotiation!**
 
