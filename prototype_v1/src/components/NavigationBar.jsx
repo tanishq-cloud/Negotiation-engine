@@ -21,11 +21,9 @@ const NavigationBar = () => {
 
   return (
     <nav className="nav-bar">
-    <h1>Negotiation Engine</h1>
       
-<p style={{ fontSize: '14px', fontWeight: 'bold', color: '#555' }}><span >prototype_v1</span></p>
-
-      {user ? (
+    <h1>Negotiation Engine</h1><span style={{ fontSize: '14px', fontWeight: 'bold', color: '#555' }} >prototype_v1</span>
+        {user ? (
         <>
         <Row>
           <Col>
