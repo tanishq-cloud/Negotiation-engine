@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Modal, Button, Card, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Card, Row, Col, Alert } from 'react-bootstrap';
 import RenderCounterOffer from './RenderCounterOffer';
 import NegotiationAnalysis from './NegotiationAnalysis';
 
@@ -17,7 +17,7 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
     setFinalAccepted(true);
     console.log('Final Accepted Offer clicked');
   };
-  console.log("i dont'know it is fetching it?",selectedNegotiation);
+  //console.log("i dont'know it is fetching it?",selectedNegotiation);
   return (
     <Modal show={showModal} onHide={handleModalClose} size="lg">
       <Modal.Header closeButton>
@@ -75,13 +75,15 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
                 </div>
             </Card.Body>
             <Card.Footer>
+            <Alert key={selectedNegotiation.status} variant={selectedNegotiation.status === 'accepted' ? 'success' : 'danger'}>
               <h2>Status: {selectedNegotiation.status}</h2>
+              </Alert>
             </Card.Footer>
         </Card>
         </Col>
         <Col md={6}>
         {selectedNegotiation.negotiationData.length > 1 && (
-          <RenderCounterOffer counterOffers={selectedNegotiation.negotiationData.slice(1) } highlightChanges />
+          <RenderCounterOffer counterOffers={selectedNegotiation.negotiationData } highlightChanges />
         )}
 
         
@@ -96,42 +98,70 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
            <Card className="mb-3">
            <Card.Body>
              <Card.Title>Final Accepted Offer</Card.Title>
+             <p>Details are compared with the proposed offer.</p>
              <div className="mt-3">
                {finalAcceptedOffer.map((finalOffer, index) => (
                 <>
                  <p key={index}>
                    <strong>Product:</strong> {finalOffer.Product}
+                   {finalOffer.Product !== selectedNegotiation.negotiationData[0].Product && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Price:</strong> {finalOffer.Price}
+                 {finalOffer.Price !== selectedNegotiation.negotiationData[0].Price && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Quantity:</strong>{" "}
                  {finalOffer.Quantity}
+                 {finalOffer.Quantity !== selectedNegotiation.negotiationData[0].Quantity && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Warranty:</strong>{" "}
                  {finalOffer.Warranty}
+                 {finalOffer.Warranty !== selectedNegotiation.negotiationData[0].Warranty && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Discount:</strong>{" "}
                  {finalOffer.Discount}
+                 {finalOffer.Discount !== selectedNegotiation.negotiationData[0].Discount && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Buyer's Finder Fee:</strong>{" "}
                  {finalOffer.BuyersFinderFee}
+                 {finalOffer.BuyersFinderFee !== selectedNegotiation.negotiationData[0].BuyersFinderFee && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Commission:</strong>{" "}
                  {finalOffer.Commission}
+                 {finalOffer.Commission !== selectedNegotiation.negotiationData[0].Commission && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Settlement Window:</strong>{" "}
                  {finalOffer.SettlementWindow}
+                 {finalOffer.SettlementWindow !== selectedNegotiation.negotiationData[0].SettlementWindow && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  <p>
                  <strong>Settlement Cycle:</strong>{" "}
                  {finalOffer.SettlementCycle}
+                 {finalOffer.SettlementCycle !== selectedNegotiation.negotiationData[0].SettlementCycle && (
+                    <span className="text-danger"> (Changed)</span>
+                  )}
                  </p>
                  </>
                ))}
@@ -148,7 +178,7 @@ const NegotiationDetailsModal = ({ showModal, handleModalClose, selectedNegotiat
       <Modal.Footer>
         <>
         {selectedNegotiation.status === 'accepted' && (
-          <Button variant="primary" onClick={() => { handleFinalAcceptedOfferClick();
+          <Button variant="success" onClick={() => { handleFinalAcceptedOfferClick();
                                                      setIsFinalAccepted(true);}}>
             Final Accepted Offer
           </Button>

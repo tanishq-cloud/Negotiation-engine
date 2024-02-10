@@ -4,11 +4,11 @@ import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Canvas from "./Canvas";
-import CurrentNegotiationAnalysis from "./CurrentNegotiationAnalysis";
-import {Row,Col} from 'react-bootstrap';
+//import CurrentNegotiationAnalysis from "./CurrentNegotiationAnalysis";
+import {Row,Col, Button} from 'react-bootstrap';
 
 
-const NavBar = () => {
+const NavigationBar = () => {
   const [user] = useAuthState(auth);
   const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
@@ -21,18 +21,25 @@ const NavBar = () => {
 
   return (
     <nav className="nav-bar">
-      <h1>Negotiation Engine</h1>
+    <h1>Negotiation Engine</h1>
+      
+<p style={{ fontSize: '14px', fontWeight: 'bold', color: '#555' }}><span >prototype_v1</span></p>
+
       {user ? (
         <>
         <Row>
-          <Col><Canvas/></Col> 
-          <Col><CurrentNegotiationAnalysis /></Col>
+          <Col>
+          
+          <Canvas/>
+          
+          </Col> 
+          {/* <Col><CurrentNegotiationAnalysis /></Col> */}
         </Row>
         
         
-        <button onClick={signOut} className="sign-out" type="button">
+        <Button onClick={signOut} className="sign-out" variant='outline-primary'>
           Sign Out
-        </button>
+        </Button>
         </>
       ) : (
         <button className="sign-in">
@@ -44,8 +51,8 @@ const NavBar = () => {
           />
         </button>
       )}
-    </nav>
+      </nav>
   );
 };
 
-export default NavBar;
+export default NavigationBar;

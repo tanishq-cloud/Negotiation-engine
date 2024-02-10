@@ -21,8 +21,8 @@ input {
 .App {
   width: 100%;
   min-height: 100vh;
-  background-color: #4d8488;
-  color: #4c768d;
+  background-color: #9bcccf;
+  color: #0f181d;
   padding-top: 60px;
 }
 
@@ -32,8 +32,8 @@ input {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #4c768d;
-  color: #242443;
+  background-color: #96cce9;
+  color: #353580;
   height: 60px;
   position: fixed;
   left: 0;
@@ -198,4 +198,11 @@ input {
   border: 1px solid #7cc5d9;
   background-color: #7cc5d9;
   font-weight: 600;
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555; /* Adjust the color as needed */
+  margin-top: 5px; /* Add some spacing if required */
 }

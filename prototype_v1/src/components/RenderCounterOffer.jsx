@@ -2,7 +2,9 @@ import React from 'react';
 import { Card, Carousel } from 'react-bootstrap';
 
 const RenderCounterOffer = ({ counterOffers, highlightChanges }) => {
-  
+  const mainOffer = counterOffers[0];
+  counterOffers = counterOffers.slice(1);
+  console.log(mainOffer)
   return (
     <Carousel>
       {counterOffers.map((counterOffer, index) => (
@@ -13,55 +15,55 @@ const RenderCounterOffer = ({ counterOffers, highlightChanges }) => {
               <div className="mt-3">
                 <p>
                   <strong>Product:</strong> {counterOffer.Product}
-                  {highlightChanges && counterOffer.Product !== counterOffers[0].Product && (
+                  {highlightChanges && counterOffer.Product !== mainOffer.Product && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Price:</strong> {counterOffer.Price}
-                  {highlightChanges && counterOffer.Price !== counterOffers[0].Price && (
+                  {highlightChanges && counterOffer.Price !== mainOffer.Price && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Quantity:</strong> {counterOffer.Quantity}
-                  {highlightChanges && counterOffer.Quantity !== counterOffers[0].Quantity && (
+                  {highlightChanges && counterOffer.Quantity !== mainOffer.Quantity && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Warranty:</strong> {counterOffer.Warranty}
-                  {highlightChanges && counterOffer.Warranty !== counterOffers[0].Warranty && (
+                  {highlightChanges && counterOffer.Warranty !== mainOffer.Warranty && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Discount:</strong> {counterOffer.Discount}
-                  {counterOffer.Discount !== counterOffers[0].Discount && (
+                  {counterOffer.Discount !== mainOffer.Discount && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Buyer's Finder Fee:</strong> {counterOffer.BuyersFinderFee}
-                  {highlightChanges && counterOffer.BuyersFinderFee !== counterOffers[0].BuyersFinderFee && (
+                  {highlightChanges && counterOffer.BuyersFinderFee !== mainOffer.BuyersFinderFee && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Commission:</strong> {counterOffer.Commission}
-                  {highlightChanges && counterOffer.Commission !== counterOffers[0].Commission && (
+                  {highlightChanges && counterOffer.Commission !== mainOffer.Commission && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Settlement Window:</strong> {counterOffer.SettlementWindow}
-                  {highlightChanges && counterOffer.SettlementWindow !== counterOffers[0].SettlementWindow && (
+                  {highlightChanges && counterOffer.SettlementWindow !== mainOffer.SettlementWindow && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>
                 <p>
                   <strong>Settlement Cycle:</strong> {counterOffer.SettlementCycle}
-                  {highlightChanges && counterOffer.SettlementCycle !== counterOffers[0].SettlementCycle && (
+                  {highlightChanges && counterOffer.SettlementCycle !== mainOffer.SettlementCycle && (
                     <span className="text-danger"> (Changed)</span>
                   )}
                 </p>

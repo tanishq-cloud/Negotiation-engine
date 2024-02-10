@@ -6,11 +6,12 @@ import Form from 'react-bootstrap/Form';
 import { Col, Row } from 'react-bootstrap';
 
 export default function NegotiationForm({ onCancel, initialData }) {
+
   const settlementWindowOptions = ['15 days','30 days', '60 days', '90 days']; 
   const settlementCycleOptions = ['Weekly', 'Bi-weekly','Monthly', 'Quarterly', 'Yearly'];
   const [formData, setFormData] = useState(initialData?.negotiationData || {});
-  //const [errors, setErrors] = useState({});
-  console.log("NegotiationForm")
+ 
+  //console.log("NegotiationForm")
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,7 +39,7 @@ export default function NegotiationForm({ onCancel, initialData }) {
       const { uid, displayName, photoURL } = auth.currentUser;
       console.log("Negotiaition Id: "+initialData.negotiationId);
       await setDoc(docRef, {
-        counterBy: arrayUnion({ uid, displayName, photoURL }),
+        counterBy: arrayUnion(uid),
         negotiationData: arrayUnion(negotiationData),
       }, { merge: true });
       console.log("Offer Updated")
@@ -80,7 +81,7 @@ export default function NegotiationForm({ onCancel, initialData }) {
       name: displayName,
       avatar: photoURL,
       negotiationData,
-      negotiationId,// Use the same negotiation ID
+      negotiationId,
       status: 'pending',
       uid,
       createdAt: serverTimestamp(),
@@ -90,7 +91,7 @@ export default function NegotiationForm({ onCancel, initialData }) {
 
   
     
-    onCancel(); // Close the form after submission
+    onCancel(); //Close the form after submission
     } catch (error) {
       console.error('Error saving negotiation data:', error);
     }

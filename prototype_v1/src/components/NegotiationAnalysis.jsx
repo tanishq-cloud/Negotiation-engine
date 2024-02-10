@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { IoPieChartSharp } from "react-icons/io5";
 
 import { Modal, Button } from 'react-bootstrap';
 
@@ -55,9 +56,10 @@ const NegotiationAnalysis = ({ negotiationData, negotiationStatus }) => {
   };
   useEffect(() => {
     calculateSimilarityIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [negotiationData]);
 
-  const chartData = {
+  const chartData = useMemo(() => ({
     labels: ['Similarity', 'Difference'],
     datasets: [
       {
@@ -66,7 +68,7 @@ const NegotiationAnalysis = ({ negotiationData, negotiationStatus }) => {
         hoverBackgroundColor: ['#36A2EB', '#FF6384'],
       },
     ],
-  };
+  }), [similarityIndex]);
 
   const handleModalOpen = () => setShowModal(true);
   const handleModalClose = () => setShowModal(false);
@@ -103,7 +105,9 @@ const NegotiationAnalysis = ({ negotiationData, negotiationStatus }) => {
     if (chartInstance) {
       chartInstance.destroy();
     }
+    
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [chartInstance, chartData])
   
 
@@ -112,8 +116,7 @@ const NegotiationAnalysis = ({ negotiationData, negotiationStatus }) => {
       <div>
       <p>Similarity Index: {similarityIndex.toFixed(2)}%</p>
       <Button variant="primary" onClick={handleModalOpen}>
-        
-        View Analysis
+        View Analysis <IoPieChartSharp size={20} />
       </Button>
       </div>
       <Modal show={showModal} onHide={handleModalClose} size="lg">
@@ -122,17 +125,17 @@ const NegotiationAnalysis = ({ negotiationData, negotiationStatus }) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Method Used: Jaccard Similarity Coefficient
+            <strong>Method Used:</strong> Euclidean distance for similarity check
           </p>
           <p>
-            Likelihood of Convergence: {likelihood}
+            <strong>Likelihood of Convergence:</strong> {likelihood}
           </p>
           <div style={{ width: '300px', margin: 'auto' }}>
             <Doughnut data={chartData} />
           </div>
           {negotiationStatus !== 'pending' && (
             <p>
-              Real World Result: {negotiationStatus === 'accepted' ? 'Converged' : 'Diverged'}
+             <strong>Real World Result:</strong> {negotiationStatus === 'accepted' ? 'Converged' : 'Diverged'}
             </p>
           )}
         </Modal.Body>

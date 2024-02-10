@@ -51,7 +51,7 @@ const CurrentNegotiationAnalysis = ({ currentUserUID }) => {
         </Offcanvas.Header>
         <Offcanvas.Body>
           <NegotiationAnalysis
-                negotiationData={currentNegotiation}
+                negotiationData={currentNegotiation.negotiationData}
                 negotiationStatus={"pending"}
             />
         </Offcanvas.Body>

@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# Negotiation Engine
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Negotiation Engine is a real-time chat-based application that facilitates offer sharing and analysis for negotiation purposes. This app is designed to help users streamline the negotiation process, view historical data, and make informed decisions based on similarity indices.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+The Negotiation Engine is developed using React and Firebase Realtime Database. It allows users to propose and discuss offers in a chat-like interface, view negotiation details, and analyze the likelihood of offer acceptance using a similarity index.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Real-Time Chat:** Users can engage in real-time chat discussions to share and discuss offers.
+- **Offer Form:** Propose new offers using the offer form, providing details like product, price, quantity, and more.
+- **Console Panel:** The console panel displays all negotiation data, proposed offers, and counter offers for easy reference.
+- **Similarity Analysis:** The app calculates a similarity index based on the Euclidean distance between the initial and final negotiation data.
+- **Firebase Integration:** Utilizes Firebase Realtime Database for real-time data synchronization and storage.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## How it Works
 
-### `npm test`
+1. **Authentication:**
+   - Users can sign in using Google authentication to access the negotiation features.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Chat Interface:**
+   - Engage in chat conversations to discuss and finalize negotiation details.
 
-### `npm run build`
+3. **Offer Form:**
+   - Use the offer form to propose new offers with relevant details.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Console Panel:**
+   - The console panel displays a history of negotiations, proposed offers, and counter offers.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. **Similarity Analysis:**
+   - The app calculates a similarity index using the Euclidean distance between the initial and final negotiation data.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Development
 
-### `npm run eject`
+### Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- React.js
+- Firebase Realtime Database
+- React Bootstrap
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Calculating Similarity Index
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The similarity index is calculated using the Euclidean distance formula, providing a quantitative measure of how similar two sets of negotiation data are. The formula is as follows:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```math
+Similarity = 1 / (1 + sqrt(sum((value1 - value2)^2)))
+```
 
-## Learn More
+### Firebase Realtime Database
+Firebase Realtime Database is used for storing negotiation data in real-time, allowing seamless synchronization across connected clients.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Build and Run
+Clone the repository.
+Install dependencies: `npm install`
+Start the development server: `npm run start`

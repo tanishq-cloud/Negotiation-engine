@@ -4,18 +4,15 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { MdAddCard } from "react-icons/md";
 import NegotiationForm from "./NegotiationForm";
 import Modal from 'react-bootstrap/Modal';
-//import Button from 'react-bootstrap/Button';
+import { IoMdSend } from "react-icons/io";
 
 
 
 const SendMessage = ({ scroll }) => {
+
   const [message, setMessage] = useState("");
-  // const [showNegotiationForm, setShowNegotiationForm] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  // const handleNegotiationClick = () => {
-  //   console.log("Negotiation button clicked");
-  //   setShowNegotiationForm(true);
-  // };
+  
   const handleNegotiationClick = () => {
     setShowModal(true);
   };
@@ -51,6 +48,7 @@ const SendMessage = ({ scroll }) => {
           <MdAddCard />
         </button>
         <form onSubmit={(event) => sendMessage(event)} className="send-message">
+          
           <label htmlFor="messageInput" hidden>
             Enter Message
           </label>
@@ -59,12 +57,12 @@ const SendMessage = ({ scroll }) => {
             name="messageInput"
             type="text"
             className="form-input__input"
-            placeholder="type message..."
+            placeholder="Type Message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <button type="submit" className="send-button">
-            Send
+          <IoMdSend size={22}/>
           </button>
         </form>
       </div>
